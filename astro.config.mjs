@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import { remarkReadingTime } from './src/utils/remark-reading-time.mjs';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -12,7 +14,10 @@ export default defineConfig({
   },
 
   integrations: [mdx()],
+
   markdown: {
     remarkPlugins: [remarkReadingTime],
-  }
+  },
+
+  adapter: cloudflare()
 });
