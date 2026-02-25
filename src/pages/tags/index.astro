@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const posts = await getCollection('blog');
+const tags = [...new Set(posts.map((post: any) => post.data.tags).flat())];
+---
+
+<Layout title="insafdev | Теги">
+	<section class="mb-12 mt-8">
+		<a href="/" class="text-zinc-500 hover:text-white transition-colors mb-6 inline-block">
+			← На главную
+		</a>
+		<h1 class="text-4xl font-bold tracking-tight text-white mb-6">
+			Теги
+		</h1>
+		<div class="flex flex-wrap gap-3">
+			{tags.length > 0 ? (
+				tags.map((tag) => (
+					<a 
+						href={`/tags/${tag}`} 
+						class="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors"
+					>
+						#{tag}
+					</a>
+				))
+			) : (
+				<p class="text-zinc-500">Тегов пока нет.</p>
+			)}
+		</div>
+	</section>
+</Layout>

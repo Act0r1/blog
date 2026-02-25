@@ -1,0 +1,51 @@
+---
+import { type CollectionEntry } from 'astro:content';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+
+// format date
+const formattedDate = post.data.pubDate.toLocaleDateString('ru-RU', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<article class="relative py-6 border-b border-zinc-800/50 hover:bg-zinc-900/20 transition-colors -mx-4 px-4 rounded-xl group">
+	<div class="flex items-baseline justify-between gap-4 mb-2">
+		<h2 class="text-xl font-semibold text-zinc-100 group-hover:text-blue-400 transition-colors">
+			<a href={`/blog/${post.slug}/`}>
+				<span class="absolute inset-0"></span>
+				{post.data.title}
+			</a>
+		</h2>
+		<time class="text-sm text-zinc-500 whitespace-nowrap relative z-10 pointer-events-none" datetime={post.data.pubDate.toISOString()}>
+			{formattedDate}
+		</time>
+	</div>
+	
+	<p class="text-zinc-400 mb-4 line-clamp-2 relative z-10 pointer-events-none">
+		{post.data.description}
+	</p>
+	
+	<div class="flex items-center gap-3 text-sm relative z-10">
+		<span class="text-zinc-500 pointer-events-none">
+			{post.render().then(({ remarkPluginFrontmatter }: any) => remarkPluginFrontmatter.minutesRead)}
+		</span>
+		
+		{post.data.tags.length > 0 && (
+			<>
+				<span class="text-zinc-700 pointer-events-none">•</span>
+				<div class="flex gap-2">
+					{post.data.tags.map((tag: string) => (
+						<a href={`/tags/${tag}`} class="text-zinc-400 hover:text-blue-400 transition-colors">#{tag}</a>
+					))}
+				</div>
+			</>
+		)}
+	</div>
+</article>

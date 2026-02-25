@@ -1,0 +1,45 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const uniqueTags = [...new Set(posts.map((post: any) => post.data.tags).flat())];
+
+	return uniqueTags.map((tag) => {
+		const filteredPosts = posts.filter((post: any) => post.data.tags.includes(tag));
+		return {
+			params: { tag },
+			props: { posts: filteredPosts },
+		};
+	});
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props as { posts: CollectionEntry<'blog'>[] };
+
+// Sort posts by date
+const sortedPosts = posts.sort(
+	(a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title={`insafdev | Посты с тегом ${tag}`}>
+	<section class="mb-12 mt-8">
+		<a href="/tags" class="text-zinc-500 hover:text-white transition-colors mb-6 inline-block">
+			← Все теги
+		</a>
+		<h1 class="text-3xl font-bold tracking-tight text-white mb-8">
+			Посты с тегом <span class="text-blue-400">#{tag}</span>
+		</h1>
+		
+		<div class="flex flex-col gap-2">
+			{sortedPosts.length > 0 ? (
+				sortedPosts.map((post: CollectionEntry<'blog'>) => <PostCard post={post} />)
+			) : (
+				<p class="text-zinc-500">Записей нет.</p>
+			)}
+		</div>
+	</section>
+</Layout>
