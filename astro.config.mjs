@@ -18,6 +18,6 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },
-
+  output: "static",
   adapter: cloudflare()
 });
