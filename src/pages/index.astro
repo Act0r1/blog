@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostCard from '../components/PostCard.astro';
+import { type CollectionEntry, getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title="insafdev | Home">
+	<section class="mb-14">
+		<h1 class="text-2xl font-semibold tracking-tight">Hi, I'm Insaf.</h1>
+		<p class="text-dim mt-2">
+			I write about <em class="text-ember not-italic">ML</em>, <em class="text-ember not-italic">Rust</em> and things I build in the evenings on my RTX 5060 Ti.
+		</p>
+	</section>
+
+	<section class="flex flex-col">
+		{posts.length > 0 ? (
+			posts.map((post: CollectionEntry<'blog'>) => <PostCard post={post} />)
+		) : (
+			<p class="text-dim">No posts yet. Check back later!</p>
+		)}
+	</section>
+</Layout>

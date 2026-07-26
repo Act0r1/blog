@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { Font } from 'astro:assets';
+import Header from '../components/Header.astro';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Notes on ML, Rust and things I build in the evenings" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="alternate" type="application/rss+xml" title="insafdev" href={new URL('rss.xml', Astro.site)} />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<title>{title}</title>
+		<Font cssVariable="--font-inter" preload />
+		<Font cssVariable="--font-literata" preload />
+		<ClientRouter />
+	</head>
+	<body class="bg-coal text-cream font-ui min-h-screen flex flex-col antialiased">
+		<Header />
+		<main class="flex-grow max-w-2xl w-full mx-auto px-6 pb-16">
+			<slot />
+		</main>
+		<footer class="max-w-2xl w-full mx-auto px-6 pb-10 text-sm text-dim">
+			&copy; {new Date().getFullYear()} insafdev &middot; <a href="https://github.com/Act0r1" class="border-b border-rule hover:text-ember transition-colors">github</a>
+		</footer>
+	</body>
+</html>

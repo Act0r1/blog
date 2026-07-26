@@ -1,0 +1,41 @@
+---
+import { type CollectionEntry, render } from 'astro:content';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<article class="relative py-7 border-t border-rule last:border-b group">
+	<div class="font-mono text-xs text-ember tracking-wide">
+		<time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+	</div>
+
+	<h2 class="text-lg font-semibold tracking-tight mt-1.5 group-hover:text-ember transition-colors">
+		<a href={`/blog/${post.id}/`}>
+			<span class="absolute inset-0"></span>
+			{post.data.title}
+		</a>
+	</h2>
+
+	<p class="text-dim text-sm mt-2 line-clamp-2">
+		{post.data.description}
+	</p>
+
+	<div class="flex flex-wrap items-center gap-2 mt-4 relative z-10">
+		<span class="font-mono text-xs text-dim mr-2 pointer-events-none">
+			{render(post).then(({ remarkPluginFrontmatter }: any) => remarkPluginFrontmatter.minutesRead)}
+		</span>
+		{post.data.tags.map((tag: string) => (
+			<a href={`/tags/${tag}`} class="text-xs text-dim bg-chip rounded-md px-2.5 py-1 hover:text-cream transition-colors">{tag}</a>
+		))}
+	</div>
+</article>

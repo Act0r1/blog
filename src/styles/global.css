@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-coal: #14110f;
+  --color-cream: #e8e1da;
+  --color-dim: #97887c;
+  --color-ember: #e08a4e;
+  --color-rule: #2a2420;
+  --color-chip: #1d1815;
+
+  --font-ui: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: var(--font-literata), Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}

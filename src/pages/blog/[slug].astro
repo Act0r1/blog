@@ -1,0 +1,55 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post: CollectionEntry<'blog'>) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(post);
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<Layout title={`insafdev | ${post.data.title}`}>
+	<article>
+		<header class="mb-12">
+			<a href="/" class="text-dim hover:text-ember transition-colors mb-10 inline-block text-sm">
+				&larr; Back
+			</a>
+
+			<div class="font-mono text-xs text-ember tracking-wide mb-3">
+				<time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+				<span class="text-dim ml-3">{remarkPluginFrontmatter.minutesRead}</span>
+			</div>
+
+			<h1 class="font-body text-3xl sm:text-4xl font-semibold tracking-tight leading-tight">
+				{post.data.title}
+			</h1>
+
+			{post.data.tags.length > 0 && (
+				<div class="flex flex-wrap gap-2 mt-5">
+					{post.data.tags.map((tag: string) => (
+						<a href={`/tags/${tag}`} class="text-xs text-dim bg-chip rounded-md px-2.5 py-1 hover:text-cream transition-colors">
+							{tag}
+						</a>
+					))}
+				</div>
+			)}
+		</header>
+
+		<div class="prose prose-invert prose-lg max-w-none font-body prose-headings:font-semibold prose-headings:tracking-tight prose-a:text-ember prose-a:no-underline hover:prose-a:underline prose-strong:text-cream prose-code:text-cream">
+			<Content />
+		</div>
+	</article>
+</Layout>
